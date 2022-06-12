@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: test-task
+spec:
+  rules:
+  - host: test-task.18.159.135.50.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: test-task
+          servicePort: 80

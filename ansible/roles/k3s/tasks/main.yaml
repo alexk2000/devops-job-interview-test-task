@@ -1,0 +1,10 @@
+- name: Install K3S
+  shell: curl -sfL https://get.k3s.io | sh -
+
+- name: Get kubectl get node
+  shell: kubectl get node
+  register: kubectl_output
+
+- name: Show kubectl get node
+  debug:
+    var: kubectl_output.stdout_lines

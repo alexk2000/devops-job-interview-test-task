@@ -1,0 +1,41 @@
+- name: Add Flux Helm repo
+  shell: helm repo add fluxcd https://charts.fluxcd.io
+
+- name: Install Flux CRD
+  shell: kubectl apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/master/deploy/crds.yaml
+
+- name: Create namespace for Flux
+  shell: kubectl create namespace {{ flux_namespace }}
+  tags: cr_flux_ns
+
+- name: Install Flux
+  shell: |
+    helm upgrade -i flux fluxcd/flux \
+       --set git.url={{ flux_git_url }} \
+       --set git.path="{{ flux_git_path }}" \
+       --set git.pollInterval={{ git_pollInterval }} \
+       --set registry.automationInterval={{ registry_automationInterval }} \
+       --set syncGarbageCollection.enabled=true \
+       --set git.ciSkip=true \
+       --namespace {{ flux_namespace }}
+  args:
+    executable: /bin/bash
+
+- name: Wait until Flux pod gets ready
+  shell: kubectl wait --for=condition=ready pod -l app=flux -n {{ flux_namespace }}
+
+- name: Install fluxctl
+  get_url:
+    url: "{{ fluxctl_url }}"
+    dest: /usr/local/bin/fluxctl
+    mode: '0755'
+
+- name: Get Flux key
+  shell: fluxctl identity --k8s-fwd-ns flux
+  register: flux_key
+
+- name: Show Flux key
+  debug: 
+    msg: 
+      - "Please add this ssh key to your git account:"
+      - "{{ flux_key.stdout }}"

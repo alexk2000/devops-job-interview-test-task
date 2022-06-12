@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-task
+  labels:
+    app: test-task
+  annotations:
+    fluxcd.io/automated: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-task
+  template:
+    metadata:
+      labels:
+        app: test-task
+    spec:
+      containers:
+      - name: test-task
+        image: registry.gitlab.com/alexk2000/test-task:1de32a430d2b2a532a4e866b062cd5f61ff40946
+        ports:
+        - containerPort: 80

@@ -1,0 +1,18 @@
+---
+- name: Setup K3S and Flux CD
+  hosts: all
+  become: yes
+  gather_facts: no
+  vars:
+    flux_git_url_: git@gitlab.com:alexk2000/test-task
+    flux_git_path_: flux
+  environment: 
+    PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/sbin
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  roles:
+    - k3s
+    - helm3
+    - role: flux
+      vars:
+        flux_git_url: "{{ flux_git_url_ }}"
+        flux_git_path: "{{  flux_git_path_ }}"

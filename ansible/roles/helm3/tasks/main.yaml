@@ -1,0 +1,9 @@
+- name: Install Helm3
+  shell: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+- name: Get Helm3 version
+  shell: helm version
+  register: helm_version
+
+- name: Show Helm3 version
+  debug: var=helm_version.stdout_lines

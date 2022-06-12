@@ -1,0 +1,4 @@
+flux_namespace: flux
+git_pollInterval: 60s
+registry_automationInterval: 60s
+fluxctl_url: https://github.com/fluxcd/flux/releases/download/1.20.1/fluxctl_linux_amd64
